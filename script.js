@@ -2,8 +2,17 @@ let appContainer = null
 
 let names = ['Ala', 'Ela']
 
+let searchFrase = ''
+
+let isSearchFocused = false
+
 const addName = function (newName) {
+   
+    if(!newName) return
+    
     names = names.concat(newName)
+
+    searchFrase = ''
 
     render()
 }
@@ -31,7 +40,7 @@ const renderList = function () {
 
 const renderNewNameInput = function () {
 
-    const div = document.createElement('div')
+    const form = document.createElement('form')
 
     const input = document.createElement('input')
     const button = document.createElement('button')
@@ -39,17 +48,19 @@ const renderNewNameInput = function () {
     input.setAttribute('placeholder', 'ADD new name')
     button.innerText = 'ADD'
 
-    button.addEventListener(
-        'click',
-        function () {
+    form.addEventListener(
+        'submit',
+        function (event) {
+            event.preventDefault()
+            
             addName(input.value)
         }
     )
 
-    div.appendChild(input)
-    div.appendChild(button)
+    form.appendChild(input)
+    form.appendChild(button)
 
-    return div
+    return form
 
 }
 
@@ -58,9 +69,28 @@ const renderSearchInput = function () {
     const div = document.createElement('div')
 
     const input = document.createElement('input')
-    const button = document.createElement('button')
 
     input.setAttribute('placeholder', 'Search name')
+    input.value = searchFrase
+
+    if(isSearchFocused){
+    setTimeout(
+        function () {
+            input.focus()
+        },
+        0
+    )
+    }
+
+    input.addEventListener(
+            'input',
+            function () {
+                searchFrase = input.value
+                isSearchFocused = true
+
+                render()
+            }
+        )
 
     div.appendChild(input)
 
@@ -71,7 +101,7 @@ const renderSearchResult = function () {
 
     const p = document.createElement('p')
 
-    if (nameExist('Ola')) {
+    if (nameExist(searchFrase)) {
         p.innerText = 'Exist'
     } else {
         p.innerText = 'NOT exist'
@@ -98,6 +128,8 @@ const render = function (container) {
     appContainer.appendChild(newNameInput)
     appContainer.appendChild(searchInput)
     appContainer.appendChild(searchResult)
+
+    isSearchFocused = false
 
     return appContainer
 }
