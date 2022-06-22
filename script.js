@@ -1,7 +1,11 @@
+let appContainer = null
+
 let names = ['Ala', 'Ela']
 
 const addName = function (newName) {
     names = names.concat(newName)
+
+    render()
 }
 
 const nameExist = function (name) {
@@ -24,8 +28,9 @@ const renderList = function () {
     return ul
 
 }
+
 const renderNewNameInput = function () {
-   
+
     const div = document.createElement('div')
 
     const input = document.createElement('input')
@@ -33,6 +38,13 @@ const renderNewNameInput = function () {
 
     input.setAttribute('placeholder', 'ADD new name')
     button.innerText = 'ADD'
+
+    button.addEventListener(
+        'click',
+        function () {
+            addName(input.value)
+        }
+    )
 
     div.appendChild(input)
     div.appendChild(button)
@@ -42,7 +54,7 @@ const renderNewNameInput = function () {
 }
 
 const renderSearchInput = function () {
-   
+
     const div = document.createElement('div')
 
     const input = document.createElement('input')
@@ -56,30 +68,38 @@ const renderSearchInput = function () {
 }
 
 const renderSearchResult = function () {
-    
-const p = document.createElement('p')
 
-p.innerText = 'Result'
+    const p = document.createElement('p')
 
-return p
+    if (nameExist('Ola')) {
+        p.innerText = 'Exist'
+    } else {
+        p.innerText = 'NOT exist'
+    }
+
+    return p
 
 }
 
 const render = function (container) {
-   
-    const div = document.createElement('div')
+
+    if (!appContainer) {
+        appContainer = document.createElement('div')
+    }
+
+    appContainer.innerHTML = ''
 
     const list = renderList()
     const newNameInput = renderNewNameInput()
     const searchInput = renderSearchInput()
     const searchResult = renderSearchResult()
 
-    div.appendChild(list)
-    div.appendChild(newNameInput)
-    div.appendChild(searchInput)
-    // div.appendChild(searchResult)
+    appContainer.appendChild(list)
+    appContainer.appendChild(newNameInput)
+    appContainer.appendChild(searchInput)
+    appContainer.appendChild(searchResult)
 
-    return div
+    return appContainer
 }
 
 const init = function (containerSelector) {
